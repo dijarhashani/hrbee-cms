@@ -1,0 +1,95 @@
+# Enable URL Rewriting
+RewriteEngine On
+
+# Default Directory Index
+DirectoryIndex frontend/pages/home.php
+
+# Specific Rewrite Rules for Clean URLs
+RewriteRule ^home/?$ frontend/pages/home.php [L]
+RewriteRule ^about/?$ frontend/pages/about.php [L]
+RewriteRule ^hr-blog/?$ frontend/pages/hr-blog.php [L]
+RewriteRule ^programs/?$ frontend/pages/programs.php [L]
+RewriteRule ^trainers/?$ frontend/pages/trainers.php [L]
+RewriteRule ^policy-privacy/?$ frontend/pages/policy.php [L]
+RewriteRule ^terms-conditions/?$ frontend/pages/terms.php [L]
+RewriteRule ^course-detail/?$ frontend/pages/course-details.php [L]
+RewriteRule ^academy-detail/?$ frontend/pages/academy-details.php [L]
+RewriteRule ^login/?$ frontend/pages/login.php [L]
+RewriteRule ^dashboard/?$ frontend/pages/cms/dashboard.php [L]
+RewriteRule ^dashboard-programet/?$ frontend/pages/cms/c-programet.php [L]
+RewriteRule ^dashboard-trajneret/?$ frontend/pages/cms/c-trajneret.php [L]
+RewriteRule ^dashboard-newsletter/?$ frontend/pages/cms/c-newsletter.php [L]
+RewriteRule ^dashboard-programet-applicants/?$ frontend/pages/cms/c-applicants.php [L]
+RewriteRule ^dashboard-programet-aplikimet-details/?$ frontend/pages/cms/aplikim-d.php [L]
+RewriteRule ^dashboard-programet-shabllonat/?$ frontend/pages/cms/c-shabllonat.php [L]
+RewriteRule ^dashboard-programet-shabllonat-edit/?$ frontend/pages/cms/shabllonat-edit.php [L]
+RewriteRule ^dashboard-shabllonat-add/?$ frontend/pages/cms/shabllonat-add.php [L]
+RewriteRule ^dashboard-programet-edit/?$ frontend/pages/cms/programet-edit.php [L]
+RewriteRule ^dashboard-programet-add/?$ frontend/pages/cms/programet-add.php [L]
+RewriteRule ^dashboard-programet-trajner-edit/?$ frontend/pages/cms/trajner-edit.php [L]
+RewriteRule ^dashboard-trajneret-add/?$ frontend/pages/cms/trajner-add.php [L]
+RewriteRule ^dashboard-reviews/?$ frontend/pages/cms/c-reviews.php [L]
+RewriteRule ^dashboard-reviews-edit/?$ frontend/pages/cms/reviews-edit.php [L]
+RewriteRule ^dashboard-review-add/?$ frontend/pages/cms/reviews-add.php [L]
+RewriteRule ^dashboard-client-potential/?$ frontend/pages/cms/c-potencial.php [L]
+RewriteRule ^evolux-config/?$ backend/database/configure-database.php [L]
+
+# Block direct access to backend files
+<FilesMatch "^backend/.*\.php$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Prevent direct access to sensitive files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|conf|env|git|sql|pl|py|rb|sh|lock)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Prevent access to .git directory
+RedirectMatch 404 /\.git
+
+# Prevent Directory Listing
+Options -Indexes
+
+# Protect against Cross-Site Scripting (XSS)
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "DENY"
+    Header set Referrer-Policy "no-referrer"
+</IfModule>
+
+# Prevent Content Injection
+AddType application/x-httpd-php .php
+
+# Restrict PHP File Writing in frontend
+<FilesMatch "\.php$">
+    # Allow access but prevent direct modifications
+    <IfModule mod_rewrite.c>
+        RewriteCond %{REQUEST_URI} ^/frontend/.*$ [NC]
+        RewriteRule ^ - [F,L]
+    </IfModule>
+</FilesMatch>
+
+# Rewrite rule to handle all other requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L]
+
+# Ensure font files are served correctly
+<FilesMatch "\.(ttf|otf|eot|woff|woff2)$">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+# Fix the MIME types for fonts
+AddType font/ttf .ttf
+AddType font/otf .otf
+AddType font/woff .woff
+AddType font/woff2 .woff2
+
+
+<Files "admin-credentials.txt">
+    Order Allow,Deny
+    Deny from all
+</Files>
