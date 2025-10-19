@@ -8,12 +8,6 @@ HRBEE CMS is a custom-built, lightweight Content Management System (CMS) designe
 - [About](#about)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Security](#security)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
